@@ -5,32 +5,148 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Simple Calculator</title>
-  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+      background-color: #f4f4f9;
+    }
+    h1 {
+      color: #333;
+    }
+    .calculator {
+      display: inline-block;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+    }
+    .input-group {
+      margin: 10px 0;
+    }
+    input[type="number"] {
+      width: 100px;
+      padding: 8px;
+      margin: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .buttons {
+      margin: 10px 0;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 4px;
+      background-color: #007bff;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    button.clear {
+      background-color: #e63946;
+    }
+    button.clear:hover {
+      background-color: #b32434;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 20px;
+      color: #333;
+    }
+    .error {
+      color: red;
+      font-size: 18px;
+    }
+  </style>
 </head>
 <body>
+
+  <h1>Simple Calculator</h1>
   <div class="calculator">
-    <div class="display">
-      <input type="text" id="result" disabled>
+    <div class="input-group">
+      <label for="num1">Number 1:</label>
+      <input type="number" id="num1" step="any" placeholder="Enter a number">
+    </div>
+    <div class="input-group">
+      <label for="num2">Number 2:</label>
+      <input type="number" id="num2" step="any" placeholder="Enter a number">
     </div>
     <div class="buttons">
-      <button class="btn" onclick="clearDisplay()">C</button>
-      <button class="btn" onclick="appendValue('/')">/</button>
-      <button class="btn" onclick="appendValue('*')">*</button>
-      <button class="btn" onclick="appendValue('-')">-</button>
-      <button class="btn" onclick="appendValue('7')">7</button>
-      <button class="btn" onclick="appendValue('8')">8</button>
-      <button class="btn" onclick="appendValue('9')">9</button>
-      <button class="btn" onclick="appendValue('+')">+</button>
-      <button class="btn" onclick="appendValue('4')">4</button>
-      <button class="btn" onclick="appendValue('5')">5</button>
-      <button class="btn" onclick="appendValue('6')">6</button>
-      <button class="btn" onclick="calculate()">=</button>
-      <button class="btn" onclick="appendValue('1')">1</button>
-      <button class="btn" onclick="appendValue('2')">2</button>
-      <button class="btn" onclick="appendValue('3')">3</button>
-      <button class="btn" onclick="appendValue('0')">0</button>
+      <button onclick="calculate('+')">+</button>
+      <button onclick="calculate('-')">-</button>
+      <button onclick="calculate('*')">&times;</button>
+      <button onclick="calculate('/')">÷</button>
+      <button class="clear" onclick="clearFields()">Clear</button>
     </div>
+    <div class="result" id="result"></div>
   </div>
-  <script src="script.js"></script>
+
+  <script>
+    function calculate(operation) {
+      const num1 = parseFloat(document.getElementById('num1').value);
+      const num2 = parseFloat(document.getElementById('num2').value);
+      const resultDiv = document.getElementById('result');
+      
+      // Clear previous result
+      resultDiv.textContent = '';
+      resultDiv.classList.remove('error');
+
+      // Validate input
+      if (isNaN(num1) || isNaN(num2)) {
+        resultDiv.textContent = 'Please enter valid numbers!';
+        resultDiv.classList.add('error');
+        return;
+      }
+
+      // Perform calculation
+      let result;
+      switch (operation) {
+        case '+':
+          result = num1 + num2;
+          break;
+        case '-':
+          result = num1 - num2;
+          break;
+        case '*':
+          result = num1 * num2;
+          break;
+        case '/':
+          if (num2 === 0) {
+            resultDiv.textContent = 'Error: Division by zero is not allowed!';
+            resultDiv.classList.add('error');
+            return;
+          }
+          result = num1 / num2;
+          break;
+        default:
+          resultDiv.textContent = 'Invalid operation!';
+          resultDiv.classList.add('error');
+          return;
+      }
+
+      // Display result
+      resultDiv.textContent = `Result: ${result}`;
+    }
+
+    function clearFields() {
+      document.getElementById('num1').value = '';
+      document.getElementById('num2').value = '';
+      document.getElementById('result').textContent = '';
+    }
+
+    // Add simple keyboard handling (Enter key for calculation)
+    document.addEventListener('keypress', function(event) {
+      if (event.key === 'Enter') {
+        calculate('+'); // Perform addition by default for now
+      }
+    });
+  </script>
+
 </body>
 </html>
