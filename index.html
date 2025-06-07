@@ -1,0 +1,130 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .calculator {
+      width: 300px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    .display {
+      background: #222;
+      font-size: 2rem;
+      color: #fff;
+      padding: 20px;
+      text-align: right;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    button {
+      font-size: 1.5rem;
+      padding: 20px;
+      border: none;
+      outline: none;
+      background: #f4f4f4;
+      cursor: pointer;
+    }
+
+    button.operator {
+      background: #ff9500;
+      color: white;
+    }
+
+    button.clear {
+      background: #d9534f;
+      color: white;
+    }
+
+    button:active {
+      background: #dcdcdc;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <div class="display" id="display">0</div>
+    <div class="buttons">
+      <button onclick="pressKey('7')">7</button>
+      <button onclick="pressKey('8')">8</button>
+      <button onclick="pressKey('9')">9</button>
+      <button class="operator" onclick="pressKey('/')">÷</button>
+
+      <button onclick="pressKey('4')">4</button>
+      <button onclick="pressKey('5')">5</button>
+      <button onclick="pressKey('6')">6</button>
+      <button class="operator" onclick="pressKey('*')">×</button>
+
+      <button onclick="pressKey('1')">1</button>
+      <button onclick="pressKey('2')">2</button>
+      <button onclick="pressKey('3')">3</button>
+      <button class="operator" onclick="pressKey('-')">−</button>
+
+      <button onclick="pressKey('0')">0</button>
+      <button onclick="pressKey('.')">.</button>
+      <button class="clear" onclick="clearDisplay()">C</button>
+      <button class="operator" onclick="pressKey('+')">+</button>
+
+      <button class="operator" style="grid-column: span 4;" onclick="calculateResult()">=</button>
+    </div>
+  </div>
+
+  <script>
+    let currentInput = '';
+    let resultDisplayed = false;
+
+    function pressKey(key) {
+      const display = document.getElementById('display');
+      if (resultDisplayed && !isNaN(key)) {
+        currentInput = key;
+        resultDisplayed = false;
+      } else {
+        currentInput += key;
+      }
+      display.textContent = currentInput || '0';
+    }
+
+    function clearDisplay() {
+      currentInput = '';
+      document.getElementById('display').textContent = '0';
+    }
+
+    function calculateResult() {
+      const display = document.getElementById('display');
+      try {
+        const output = eval(currentInput.replace('÷', '/').replace('×', '*'));
+        if (output === Infinity || output === -Infinity || isNaN(output)) {
+          display.textContent = 'Error';
+        } else {
+          display.textContent = output;
+        }
+        currentInput = output.toString();
+        resultDisplayed = true;
+      } catch (error) {
+        display.textContent = 'Error';
+        currentInput = '';
+      }
+    }
+  </script>
+</body>
+</html>
